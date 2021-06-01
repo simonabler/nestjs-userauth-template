@@ -6,7 +6,7 @@ export class LoginDto {
     example: 'trinhchin',
     description: 'The name of the User',
   })
-  @Length(5, 20)
+  @Length(2, 20)
   @IsNotEmpty()
   readonly username: string;
 

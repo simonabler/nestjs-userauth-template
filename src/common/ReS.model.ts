@@ -1,3 +1,5 @@
+import { ApiProperty } from '@nestjs/swagger';
+
 export class ReS<T> {
   static FromData<T>(arg0: T): ReS<T> {
     const ret = new ReS<T>();
@@ -6,6 +8,8 @@ export class ReS<T> {
     return ret;
   }
 
+  @ApiProperty({ example: true, description: 'success indicator' })
   public success = true;
+
   public data: T;
 }

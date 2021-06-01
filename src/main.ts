@@ -1,21 +1,30 @@
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
+import { Transport, MicroserviceOptions } from '@nestjs/microservices';
 import { AppConfigService } from './config/app/config.service';
+import { INestApplication } from '@nestjs/common';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
   const appConfig: AppConfigService = app.get('AppConfigService');
 
+  console.log(appConfig.url)
   app.setGlobalPrefix('api/v1');
 
+  bootstrapSwagger(app, appConfig);
+
+  await bootstrapMicroservices(app, appConfig);
+
+  await app.listen(appConfig.port);
+}
+
+function bootstrapSwagger(app: INestApplication, appConfig: AppConfigService) {
   const config = new DocumentBuilder()
     .setTitle('Cats example')
     .setDescription('The cats API description')
     .setVersion('1.0')
-    .addTag('cats')
-    .addTag('users')
-    .addServer('http://localhost:9001/api/v1/', 'v1')
+    .addServer(appConfig.url + '/api/v1/', 'v1')
     .addBearerAuth()
     .build();
 
@@ -30,6 +39,25 @@ async function bootstrap() {
     },
     customSiteTitle: 'My API Docs',
   });
-  await app.listen(appConfig.port);
 }
+
+async function bootstrapMicroservices(
+  app: INestApplication,
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  _appConfig: AppConfigService,
+) {
+  app.connectMicroservice<MicroserviceOptions>({
+    transport: Transport.RMQ,
+    options: {
+      urls: [`amqp://guest:guest@10.64.0.184`],
+      queue: 'ematricQue',
+      queueOptions: {
+        durable: true,
+      },
+    },
+  });
+
+  await app.startAllMicroservicesAsync();
+}
+
 bootstrap();

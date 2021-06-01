@@ -30,6 +30,18 @@ export class UsersService {
     return this.usersRepository.findAll(relations, throwsException);
   }
 
+  async delete(id: string, throwsException = true): Promise<boolean | null> {
+    return this.usersRepository
+      .delete(id)
+      .then((result) => {
+        if (throwsException && (!result.affected || result.affected === 0)) {
+          return Promise.reject(new NotFoundException('Model not found.'));
+        }
+        return Promise.resolve(true);
+      })
+      .catch((error) => Promise.reject(error));
+  }
+
   async getByName(
     name: string,
     relations: string[] = [],

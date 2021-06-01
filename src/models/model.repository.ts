@@ -63,7 +63,7 @@ export class ModelRepository<T, K extends ModelEntity> extends Repository<T> {
     inputs: DeepPartial<T>,
     relations: string[] = [],
   ): Promise<K> {
-    return this.save(inputs)
+    return this.insert(inputs)
       .then(async (entity) => await this.get((entity as any).id, relations))
       .catch((error) => Promise.reject(error));
   }

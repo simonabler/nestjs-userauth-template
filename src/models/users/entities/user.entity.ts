@@ -13,7 +13,7 @@ import { IUser } from '../interfaces/user.interface';
 import { Role } from './role.entity';
 @Entity({ name: 'users' })
 export class User implements IUser {
-  @PrimaryGeneratedColumn('rowid')
+  @PrimaryGeneratedColumn('increment')
   id: string;
 
   @Column()

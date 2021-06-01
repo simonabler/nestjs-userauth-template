@@ -3,6 +3,7 @@ import { Module } from '@nestjs/common';
 import { TypeOrmModule, TypeOrmModuleAsyncOptions } from '@nestjs/typeorm';
 import { MysqlConfigModule } from '../../../config/database/mysql/config.module';
 import { MysqlConfigService } from '../../../config/database/mysql/config.service';
+
 @Module({
   imports: [
     TypeOrmModule.forRootAsync({

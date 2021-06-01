@@ -1,0 +1,8 @@
+[
+    {
+      "type": "mysql",
+      "entities": ["dist/**/*.entity{ .ts,.js}"],
+      "migrations": ["dist/migrations/*{.ts,.js}"],
+      "migrationsRun": true
+    }
+  ]
